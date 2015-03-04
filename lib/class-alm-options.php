@@ -4,7 +4,7 @@ class Alm_Options{
 	## available settings
 	static $sections;
 	static $settings;
-	static $default_section = 'alm_alerts';
+	static $default_section = 'alm_default_alert';
 	
 	## saved options
 	static $options = array();
@@ -131,20 +131,24 @@ class Alm_Options{
 # Initialize static variables
 ## generate all settings for backend
 Alm_Options::$sections = array(
-	array('name' => 'alm_alerts', 'title' => 'Alerts'),
+	array('name' => 'alm_default_alert', 'title' => 'Default Alert'),
+	array('name' => 'alm_default_advanced', 'title' => 'Default Alert: Advanced Options'),	
 	array('name' => 'alm_countdown', 'title' => 'Countdown Timer',
 		'description' => '<p>Use the shortcode <kbd>[alm_countdown]</kbd> to insert the countdown.</p> 
 			<p>If you get the result <kbd>-1</kbd> this means we were unable to successfully produce a timestamp from your input.</p>'
 	),
 );
 Alm_Options::$settings = array(
-	# Alerts
+	# Default Alert
 	array(
-		'name' => 'show_msg_all', 'label' => 'Show at the top of every page', 'type' => 'checkbox',
-		'choices' => 'Yes'
+		'name' => 'show_msg_all', 'label' => 'Insert at the top of every page', 'type' => 'checkbox',
+		'choices' => 'Yes',
+		'description' => 'Please note that if you have fixed-position elements at the top of the &lt;body&gt;, '
+			. 'your alert may not be visible. To bypass our auto-insertion and insert the default alert into a location of your choosing '
+			. 'on a single page, post, or widget, you can just use the shortcode <code><b>[alm_alert]</b></code>'
 	),
 	array(
-		'name' => 'show_msg_page_ids', 'label' => 'Show only on these pages',
+		'name' => 'show_msg_page_ids', 'label' => 'Insert on these pages only',
 		'description' => 'Enter a comma-separated list of page/post ID\'s'
 	),	
 	array(
@@ -153,9 +157,17 @@ Alm_Options::$settings = array(
 	),
 	array('name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker'),
 	array('name' => 'default_msg_text_color', 'label' => 'Text Color', 'class' => 'color-picker'),
-	array('name' => 'dom_element', 'label' => 'DOM element to insert the alert',
+	
+	# Advanced Options
+	array('name' => 'more_css', 'label' => 'Additional CSS', 'type' => 'textarea',
+		'description' => 'Type any additional CSS you wish.  Note that the default alert has a container '
+			. 'of the form <code><b>div#alm-default-msg</b></code>',
+		'section' => 'alm_default_advanced'
+	),
+	array('name' => 'dom_element', 'label' => 'Insert into this DOM element',
 		'description' => 'By default, the alert is prepended to the <code>&lt;body&gt;</code> tag.  If you\'d like the alert to be ' 
-			. 'inserted elsewhere, specify a valid DOM element with a unique ID like <code>#my_div</code>.',
+			. 'inserted elsewhere, specify a valid DOM element with a unique ID like <code><b>#my_div</b></code>.',
+		'section' => 'alm_default_advanced'			
 	),
 	# Countdown
 	array('name' => 'countdown_date', 'type' => 'text', 'label' => 'Target date',

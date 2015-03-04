@@ -23,9 +23,7 @@ class Alm{
 	**/
 	
 	# enqueue scripts
-	static function enqueue(){
-	
-	}
+	static function enqueue(){}
 	# default message
 	static function default_message(){
 		# Check if we have a message in the system
@@ -58,11 +56,28 @@ class Alm{
 		);
 		wp_localize_script('alm-default-msg-js', 'AlmData', $a);	
 	}
+	# shortcode [alm_alert]
+	function do_alert(){
+		extract(Alm_Options::$options);
+		if(!$default_msg) return;
+	?>
+		<link href="<?php echo alm_url('/css/alm.css'); ?>" rel='stylesheet'/>
+		<?php if($more_css){ ?><style><?php echo $more_css; ?></style><?php } ?>
+		<div 
+			id='alm-default-msg'
+			style="<?php 
+				if($default_msg_text_color) echo 'color: '.$default_msg_text_color.'; '; 
+				if($default_msg_bg_color) echo 'background: '.$default_msg_bg_color.'; ';
+			?>"
+		
+		><?php echo $default_msg; ?></div>
+	<?php
+	}
 	# shortcode [alm_countdown]
-	static function alm_countdown(){
+	static function do_countdown(){
 		# current timestamp
 		$now = time();
-		# Easter timezone is UTC -5
+		# Eastern timezone is UTC -5
 		$now = $now - (5*60*60);
 		
 		# try to get timestamp from date specified in options

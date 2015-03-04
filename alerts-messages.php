@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Alerts & Messages
  * Description: Displays alerts and messages on your site, including a countdown timer
- * Version: 0.0.2
+ * Version: 0.0.3
  * Author: Big Boom Design
  * Author URI: http://bigboomdesign.com
  */
@@ -37,8 +37,11 @@ else{
 	# Default message
 	add_action('wp', array('Alm','default_message'));
 
-	# Shortcode for countdown
-	add_shortcode('alm_countdown', array('Alm', 'alm_countdown'));
+	# Shortcodes
+	## alert
+	add_shortcode('alm_alert', array('Alm', 'do_alert'));
+	## countdown
+	add_shortcode('alm_countdown', array('Alm', 'do_countdown'));
 
 } # end: front end routines
 #end main routine
