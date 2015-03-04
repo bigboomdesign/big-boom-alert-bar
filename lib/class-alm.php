@@ -54,6 +54,7 @@ class Alm{
 			'message' => $msg,
 			'bgColor' => Alm_Options::$options['default_msg_bg_color'] ? Alm_Options::$options['default_msg_bg_color'] : '#fff',
 			'textColor' => Alm_Options::$options['default_msg_text_color'] ? Alm_Options::$options['default_msg_text_color'] : '#000',
+			'domElement' => Alm_Options::$options['dom_element'] ? Alm_Options::$options['dom_element'] : 'body',
 		);
 		wp_localize_script('alm-default-msg-js', 'AlmData', $a);	
 	}

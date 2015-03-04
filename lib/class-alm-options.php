@@ -153,6 +153,10 @@ Alm_Options::$settings = array(
 	),
 	array('name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker'),
 	array('name' => 'default_msg_text_color', 'label' => 'Text Color', 'class' => 'color-picker'),
+	array('name' => 'dom_element', 'label' => 'DOM element to insert the alert',
+		'description' => 'By default, the alert is prepended to the <code>&lt;body&gt;</code> tag.  If you\'d like the alert to be ' 
+			. 'inserted elsewhere, specify a valid DOM element with a unique ID like <code>#my_div</code>.',
+	),
 	# Countdown
 	array('name' => 'countdown_date', 'type' => 'text', 'label' => 'Target date',
 		'description' => 'Enter a date in a format like <b>January 1, 1970</b>',
