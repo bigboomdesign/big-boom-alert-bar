@@ -46,7 +46,7 @@ class Alm{
 		if(!$bShow) return;
 		wp_enqueue_style('alm-css', alm_url('/css/alm.css'));
 		wp_enqueue_script('alm-default-msg-js', alm_url('/js/alm-default-msg.js'), array('jquery'));
-	
+		if($more_css = Alm_Options::$options['more_css']){ ?><style><?php echo $more_css; ?></style><?php }
 		# pass the message to the JS file
 		$a = array(
 			'message' => $msg,
