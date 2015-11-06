@@ -13,17 +13,20 @@ class Alm_Options{
 	static function do_settings_field($setting){
 		$setting = Alm::get_field_array($setting);	
 		# call one of several functions based on what type of field we have
-		switch($setting['type']){
-			case "textarea":
-				self::textarea_field($setting);
-			break;
-			case "checkbox":
-				self::checkbox_field($setting);
-			break;
-			case "single-image":
-				self::image_field($setting);
-			break;
-			default: self::text_field($setting);
+
+		if( ! empty( $setting['type'] ) ) {
+			switch($setting['type']){
+				case "textarea":
+					self::textarea_field($setting);
+				break;
+				case "checkbox":
+					self::checkbox_field($setting);
+				break;
+				case "single-image":
+					self::image_field($setting);
+				break;
+				default: self::text_field($setting);
+			}
 		}
 		if(array_key_exists('description', $setting)) {
 		?>
@@ -38,7 +41,7 @@ class Alm_Options{
 			id="<?php echo $name; ?>" 
 			name="alm_options[<?php echo $name; ?>]" 
 			class="regular-text <?php if(array_key_exists('class', $setting)) echo $setting['class']; ?>" 
-			type='text' value="<?php echo self::$options[$name]; ?>" />
+			type='text' value="<?php if( ! empty( self::$options[ $name ] ) ) echo self::$options[$name]; ?>" />
 		<?php	
 	}
 	## Textarea field
@@ -128,6 +131,7 @@ class Alm_Options{
 	}
 	static function options_validate($input){return $input;}
 }
+
 # Initialize static variables
 ## generate all settings for backend
 Alm_Options::$sections = array(
@@ -173,7 +177,13 @@ Alm_Options::$settings = array(
 	array('name' => 'countdown_date', 'type' => 'text', 'label' => 'Target date',
 		'description' => 'Enter a date in a format like <b>January 1, 1970</b>',
 		'section' => 'alm_countdown',
-	)
+	),
 );
 ## get saved options
 Alm_Options::$options = get_option('alm_options');
+if( ! Alm_Options::$options ) { 
+	Alm_Options::$options = array(
+		'default_msg' => '',
+		'more_css' => '',
+	); 
+}
