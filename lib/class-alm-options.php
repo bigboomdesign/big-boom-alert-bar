@@ -13,7 +13,7 @@ class Alm_Options{
 	static function do_settings_field($setting){
 		$setting = Alm::get_field_array($setting);	
 		# call one of several functions based on what type of field we have
-		switch($setting['type']){
+		if ( ! empty( $setting['type'] ) ) switch($setting['type']){
 			case "textarea":
 				self::textarea_field($setting);
 			break;
@@ -37,8 +37,8 @@ class Alm_Options{
 		?><input 
 			id="<?php echo $name; ?>" 
 			name="alm_options[<?php echo $name; ?>]" 
-			class="regular-text <?php if(array_key_exists('class', $setting)) echo $setting['class']; ?>" 
-			type='text' value="<?php echo self::$options[$name]; ?>" />
+			class="regular-text <?php if( array_key_exists( 'class', $setting ) ) echo $setting['class']; ?>" 
+			type='text' value="<?php if( ! isset( $options ) ) echo self::$options[$name]; ?>" />
 		<?php	
 	}
 	## Textarea field
@@ -58,7 +58,7 @@ class Alm_Options{
 				name="alm_options[<?php echo $choice['id']; ?>]"
 				value="<?php echo $choice['value']; ?>"
 				class="<?php if(array_key_exists('class', $setting)) echo $setting['class']; ?>"
-				<?php checked(true, array_key_exists($choice['id'], self::$options)); ?>						
+				<?php if( ! empty( self::$options ) ) checked(true, array_key_exists($choice['id'], self::$options)); ?>						
 			/>&nbsp;<?php echo $choice['label']; ?> &nbsp; &nbsp;
 		</label>
 		<?php
@@ -155,8 +155,8 @@ Alm_Options::$settings = array(
 		'name' => 'default_msg', 'label' => 'Default message', 'type' => 'textarea',
 		'description' => 'You can use HTML in your message'
 	),
-	array('name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker'),
-	array('name' => 'default_msg_text_color', 'label' => 'Text Color', 'class' => 'color-picker'),
+	array('name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker', 'type' => 'text'),
+	array('name' => 'default_msg_text_color', 'label' => 'Text Color', 'class' => 'color-picker', 'type' => 'text'),
 	
 	# Advanced Options
 	array('name' => 'more_css', 'label' => 'Additional CSS', 'type' => 'textarea',
