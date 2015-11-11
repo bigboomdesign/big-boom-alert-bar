@@ -13,7 +13,8 @@ class Alm_Options{
 	static function do_settings_field($setting){
 		$setting = Alm::get_field_array($setting);	
 		# call one of several functions based on what type of field we have
-		if ( ! empty( $setting['type'] ) ) switch($setting['type']){
+		if ( empty( $setting['type'] ) ) $setting['type'] = ''; 
+		switch( $setting['type'] ) {
 			case "textarea":
 				self::textarea_field($setting);
 			break;
@@ -155,8 +156,8 @@ Alm_Options::$settings = array(
 		'name' => 'default_msg', 'label' => 'Default message', 'type' => 'textarea',
 		'description' => 'You can use HTML in your message'
 	),
-	array('name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker', 'type' => 'text'),
-	array('name' => 'default_msg_text_color', 'label' => 'Text Color', 'class' => 'color-picker', 'type' => 'text'),
+	array('name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker'),
+	array('name' => 'default_msg_text_color', 'label' => 'Text Color', 'class' => 'color-picker'),
 	
 	# Advanced Options
 	array('name' => 'more_css', 'label' => 'Additional CSS', 'type' => 'textarea',
