@@ -59,7 +59,7 @@ class Alm{
 		wp_localize_script('alm-default-msg-js', 'AlmData', $a);	
 	}
 	# shortcode [alm_alert]
-	function do_alert(){
+	static function do_alert(){
 		extract(Alm_Options::$options);
 		if(!$default_msg) return;
 	?>
