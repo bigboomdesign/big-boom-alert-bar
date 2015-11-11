@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Alerts & Messages
  * Description: Displays alerts and messages on your site, including a countdown timer
- * Version: 0.0.3
+ * Version: 0.0.5
  * Author: Big Boom Design
  * Author URI: http://bigboomdesign.com
  */

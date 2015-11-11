@@ -38,7 +38,7 @@ class Alm_Options{
 			id="<?php echo $name; ?>" 
 			name="alm_options[<?php echo $name; ?>]" 
 			class="regular-text <?php if( array_key_exists( 'class', $setting ) ) echo $setting['class']; ?>" 
-			type='text' value="<?php if( ! isset( $options ) ) echo self::$options[$name]; ?>" />
+			type='text' value="<?php if( isset( self::$options[$name] ) ) echo self::$options[$name]; ?>" />
 		<?php	
 	}
 	## Textarea field
