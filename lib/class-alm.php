@@ -84,10 +84,8 @@ class Alm {
 		
 		wp_enqueue_script( 'alm-default-msg-js', alm_url( '/js/alm-default-msg.js' ), array( 'jquery' ) );
 		
-		if( $more_css = Alm_Options::$options['more_css'] ) { 
-			
+		if( $more_css = Alm_Options::$options['more_css'] ) {
 			wp_add_inline_style( 'alm-css', $more_css );
-		
 		} # end if
 
 		# pass the message to the JS file
@@ -153,7 +151,6 @@ class Alm {
 		if( self::$debug ) { 
 
 			echo "You entered: " . $countdown_date."<br />";
-			
 			echo "We got: "; var_dump($target); echo "<br />"; 
 		
 		?>
@@ -168,11 +165,8 @@ class Alm {
 		$time = $target - $now;
 
 		if( $time <= 0 ) { 
-			
 			if( self::$debug ) echo 'Please pick a date in the future';
-			
 			return '-1';
-
 		} # end if
 
 		# get number of days based on number of seconds
