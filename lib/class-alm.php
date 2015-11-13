@@ -1,111 +1,190 @@
 <?php
-class Alm{
+class Alm {
 	# set to true for debugging
 	static $debug = false;
-	static $classes = array("alm-options");
+	static $classes = array( "alm-options" );
 
 	/**
-	* Back end
-	**/
-	static function admin_enqueue(){
+	 * Back end
+	 */
+
+	/**
+	 * Enqueue admin scripts
+	 * 
+	 * @since 1.0.0
+	 */
+	static function admin_enqueue() {
+
 		$screen = get_current_screen();
-		if($screen->id != 'settings_page_alm_settings') return;
+		if( $screen->id != 'settings_page_alm_settings' ) return;
+		
 		wp_enqueue_style('alm-admin-css', alm_url('/css/alm-admin.css'));
 		wp_enqueue_style('alm-iris-css', alm_url('/assets/iris/iris.min.css'));
+		
 		wp_enqueue_script('alm-options-js', alm_url('/js/admin/plugin-options.js'), array('jquery', 'alm-iris-js'));
+		
 		wp_enqueue_media();
+		
 		wp_enqueue_script('alm-jquery-ui-js', alm_url('/assets/iris/jquery-ui.js'), array('jquery', 'media-views'));
 		wp_enqueue_script('alm-iris-js', alm_url('/assets/iris/iris.min.js'), array('jquery', 'alm-jquery-ui-js'));	
-	}
-	
+
+	} # end admin_enqueue()
+
 	/**
 	* Front end
 	**/
 	
-	# enqueue scripts
-	static function enqueue(){}
-	# default message
-	static function default_message(){
+	/**
+	 * Enqueue front end scripts 
+	 *
+	 * @since 1.0.0
+	 */
+	static function enqueue() { 
+
+	} # end enqueue()
+
+
+	/**
+	 * Check if we have a message in place, if not display a default message
+	 *
+	 * @since 1.0.0
+	 */
+	static function default_message() {
+
 		# Check if we have a message in the system
-		if(!($msg = Alm_Options::$options['default_msg'])) return;
+		if( ! ( $msg = Alm_Options::$options['default_msg'] ) ) return;
+
 		# Check if we need to show the message on this page
 		$bShow = false;
+
 		# if showing on all pages
-		if(isset(Alm_Options::$options['show_msg_all_yes'])) $bShow = true;
+		if( isset( Alm_Options::$options['show_msg_all_yes'] ) ) $bShow = true;
+
 		# if only showing on certain pages
-		elseif($sIds = Alm_Options::$options['show_msg_page_ids']){
-			$aIds = explode(',', $sIds);
-			foreach($aIds as $id){
-				$id = trim($id);
-				if(get_the_id() == $id){
+		elseif( $sIds = Alm_Options::$options['show_msg_page_ids'] ) {
+
+			$aIds = explode( ',', $sIds );
+
+			foreach( $aIds as $id ) {
+			
+				$id = trim( $id );
+			
+				if( get_the_id() == $id ) {
 					$bShow = true;
 					break;
-				}
-			}
-		}
-		if(!$bShow) return;
-		wp_enqueue_style('alm-css', alm_url('/css/alm.css'));
-		wp_enqueue_script('alm-default-msg-js', alm_url('/js/alm-default-msg.js'), array('jquery'));
-		if($more_css = Alm_Options::$options['more_css']){ 
-			wp_add_inline_style('alm-css', $more_css);
-		}
+				} # end if
+			
+			} # end foreach : page ID's for message dislay
+
+		} # end elseif
+
+		if( ! $bShow ) return;
+
+		wp_enqueue_style( 'alm-css', alm_url( '/css/alm.css' ) );
+		
+		wp_enqueue_script( 'alm-default-msg-js', alm_url( '/js/alm-default-msg.js' ), array( 'jquery' ) );
+		
+		if( $more_css = Alm_Options::$options['more_css'] ) { 
+			
+			wp_add_inline_style( 'alm-css', $more_css );
+		
+		} # end if
+
 		# pass the message to the JS file
 		$a = array(
 			'message' => $msg,
-			'bgColor' => ( !empty( Alm_Options::$options['default_msg_bg_color'] ) ? Alm_Options::$options['default_msg_bg_color'] : '#fff' ),
-			'textColor' => ( !empty( Alm_Options::$options['default_msg_text_color'] ) ? Alm_Options::$options['default_msg_text_color'] : '#000' ),
-			'domElement' => ( !empty( Alm_Options::$options['dom_element'] ) ? Alm_Options::$options['dom_element'] : 'body' ),
+			'bgColor' => ( ! empty( Alm_Options::$options['default_msg_bg_color'] ) ? Alm_Options::$options['default_msg_bg_color'] : '#fff' ),
+			'textColor' => ( ! empty( Alm_Options::$options['default_msg_text_color'] ) ? Alm_Options::$options['default_msg_text_color'] : '#000' ),
+			'domElement' => ( ! empty( Alm_Options::$options['dom_element'] ) ? Alm_Options::$options['dom_element'] : 'body' ),
 		);
-		wp_localize_script('alm-default-msg-js', 'AlmData', $a);	
-	}
-	# shortcode [alm_alert]
+
+		wp_localize_script('alm-default-msg-js', 'AlmData', $a);
+
+	} # end default_message()
+	
+	/**
+	* shortcode [alm_alert]
+	*
+	* @since 1.0.0
+	*/
 	static function do_alert(){
-		extract(Alm_Options::$options);
-		if(!$default_msg) return;
+		
+		extract( Alm_Options::$options );
+		if( ! $default_msg ) return;
+
 	?>
 		<link href="<?php echo alm_url('/css/alm.css'); ?>" rel='stylesheet'/>
-		<?php if($more_css){ ?><style><?php echo $more_css; ?></style><?php } ?>
-		<div 
+		<?php if( $more_css ) { ?><style><?php echo $more_css; ?></style><?php } ?>
+
+		<div
 			id='alm-default-msg'
 			style="<?php 
 				if($default_msg_text_color) echo 'color: '.$default_msg_text_color.'; '; 
 				if($default_msg_bg_color) echo 'background: '.$default_msg_bg_color.'; ';
-			?>"
-		
+			?>"		
 		><?php echo $default_msg; ?></div>
+
 	<?php
-	}
-	# shortcode [alm_countdown]
-	static function do_countdown(){
+	
+	} # end do_alert()
+
+	/**
+	* shortcode [alm_countdown]
+	*
+	* @return 	( string | integer ) 	$days 	Returns day count, or -1 if there was an error
+	*
+	* @since 1.0.0
+	*/
+	static function do_countdown() {
+		
 		# current timestamp
 		$now = time();
+
 		# Eastern timezone is UTC -5
-		$now = $now - (5*60*60);
+		$now = $now - ( 5*60*60 );
 		
 		# try to get timestamp from date specified in options
-		if(!Alm_Options::$options) return '-1';
-		extract(Alm_Options::$options);		
-		$target = strtotime($countdown_date);		
-		if(self::$debug){ 
+		if( ! Alm_Options::$options ) return '-1';
+
+		extract( Alm_Options::$options );		
+		
+		$target = strtotime( $countdown_date );		
+		
+		if( self::$debug ) { 
+
 			echo "You entered: " . $countdown_date."<br />";
+			
 			echo "We got: "; var_dump($target); echo "<br />"; 
+		
 		?>
+
 			<p>Right now: <?php echo date('j M Y h:i:sA', $now); ?></p>		
+
 		<?php
-		}
+
+		} # end if
+		
 		# make sure date is in the future
 		$time = $target - $now;
-		if($time <= 0 ){ 
-			if(self::$debug) echo 'Please pick a date in the future';
-			return "-1";
-		}
+
+		if( $time <= 0 ) { 
+			
+			if( self::$debug ) echo 'Please pick a date in the future';
+			
+			return '-1';
+
+		} # end if
+
 		# get number of days based on number of seconds
-		$days = $time/(60*60*24);
+		$days = $time / ( 60*60*24 );
+
 		# round up
-		$days = ceil($days);
+		$days = ceil( $days );
+
 		# return the day count
-		return ceil($days);
-	}
+		return ceil( $days );
+	
+	} # end do_countdown
 	
 	/**
 	* Helper Functions
