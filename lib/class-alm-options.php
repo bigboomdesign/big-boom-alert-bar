@@ -458,13 +458,18 @@ Alm_Options::$settings = array(
 		'name' => 'show_msg_all', 'label' => 'Insert at the top of every page', 'type' => 'checkbox',
 		'choices' => 'Yes',
 		'description' => 'Please note that if you have fixed-position elements at the top of the &lt;body&gt;, '
-			. 'your alert may not be visible. To bypass our auto-insertion and insert the default alert into a location of your choosing '
-			. 'on a single page, post, or widget, you can just use the shortcode <code><b>[alm_alert]</b></code>'
+			. 'your alert may not be visible. To bypass our auto-insertion and insert the alert into a location of your choosing '
+			. 'on a single page, post, or widget, you can just use the shortcode <code><b>[alm_alert]</b></code>.'
 	),
 	array(
-		'name' => 'show_msg_page_ids', 'label' => 'Insert on these pages only',
-		'description' => 'Enter a comma-separated list of page/post ID\'s'
+		'name' => 'show_msg_home', 'label' => 'Show message on home page', 'type' => 'checkbox',
+		'choices' => 'Yes',
+		'description' => 'If not showing on all pages, check here to show the alert on the home page.'
 	),	
+	array(
+		'name' => 'show_msg_page_ids', 'label' => 'Insert on these pages only',
+		'description' => 'Enter a comma-separated list of page/post ID\'s where the alert should be shown.'
+	),
 	array(
 		'name' => 'default_msg', 'label' => 'Default message', 'type' => 'textarea',
 		'description' => 'You can use HTML in your message'
