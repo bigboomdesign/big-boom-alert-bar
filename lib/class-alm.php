@@ -52,33 +52,10 @@ class Alm {
 	static function default_message() {
 
 		# Check if we have a message in the system
-		if( ! ( $msg = Alm_Options::$options['default_msg'] ) ) return;
+		if( empty ( $msg = Alm_Options::$options['default_msg'] ) ) return;
 
 		# Check if we need to show the message on this page
-		$bShow = false;
-
-		# if showing on all pages
-		if( isset( Alm_Options::$options['show_msg_all_yes'] ) ) $bShow = true;
-
-		# if only showing on certain pages
-		elseif( $sIds = Alm_Options::$options['show_msg_page_ids'] ) {
-
-			$aIds = explode( ',', $sIds );
-
-			foreach( $aIds as $id ) {
-			
-				$id = trim( $id );
-			
-				if( get_the_id() == $id ) {
-					$bShow = true;
-					break;
-				} # end if
-			
-			} # end foreach : page ID's for message dislay
-
-		} # end elseif
-
-		if( ! $bShow ) return;
+		if( ! self::alert_should_show() ) return;
 
 		wp_enqueue_style( 'alm-css', alm_url( '/css/alm.css' ) );
 		
@@ -187,8 +164,50 @@ class Alm {
 	} # end do_countdown
 	
 	/**
-	* Helper Functions
-	**/
+	 * Helper Functions
+	 */
+
+	/**
+	 * Whether or not the alert message should show on the current page
+	 *
+	 * @since 	1.0.0
+	 */
+	static function alert_should_show() {
+
+		# if showing on all pages
+		if( isset( Alm_Options::$options['show_msg_all_yes'] ) ) return true;
+
+		# if showing on home page
+		if( isset( Alm_Options::$options['show_msg_home_yes'] ) ) {
+
+			if( 
+				( is_home() && 'posts' == get_option( 'show_on_front' ) )
+				|| is_front_page() 
+			) {
+				return true;
+			}
+		} # end if: showing on home page
+
+		# if only showing on certain pages
+		if( $sIds = Alm_Options::$options['show_msg_page_ids'] ) {
+
+			$aIds = explode( ',', $sIds );
+
+			foreach( $aIds as $id ) {
+			
+				$id = trim( $id );
+			
+				if( get_the_id() == $id ) {
+					return true;
+				} 
+			
+			} # end foreach : page ID's for message dislay
+
+		} # end if: only showing on certain pages
+
+		return false;
+
+	} # end: alert_should_show()
 
 	# require a file, checking first if it exists
 	static function req_file($path){ if(file_exists($path)) require_once $path; }
