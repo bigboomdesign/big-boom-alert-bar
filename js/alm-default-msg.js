@@ -29,7 +29,7 @@ jQuery(document).ready(function($){
 			' color: ' + textColor + 
 		'">' + 
 			message + 
-		'</div>';
+		'<div id="hide-btn"><span class="x">x</span></div></div>';
 
 	// prepend or append the message
 	if( 'prepend' == prependAppend ) {
@@ -38,5 +38,22 @@ jQuery(document).ready(function($){
 	else if( 'append' == prependAppend ) {
 		$element.append( messageHTML );
 	}
+
+	// onclick for hide button
+	$( document ).on( 'click', '#hide-btn', function() {
+
+		// the alert bar element
+		var $almBar = $('#alm-default-msg');
+
+  		$almBar.css({
+  			opacity: '0',
+  			transition: 'all 1s ease'
+  		});
+  		setTimeout(  function() {
+			$almBar.css({display: 'none'});
+  		}, 1000);
+
+	}); // end onclick: hide button
+
 	
 });  // end: on document ready
