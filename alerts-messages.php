@@ -2,12 +2,13 @@
 /**
  * Plugin Name: Alerts & Messages
  * Description: Displays alerts and messages on your site, including a countdown timer
- * Version: 0.1.0
+ * Version: 0.3.0
  * Author: Big Boom Design
  * Author URI: http://bigboomdesign.com
  */
 
 require_once alm_dir("lib/class-alm.php");
+
 # Admin routines
 if(is_admin()){	
 	# define sections and fields for options page
