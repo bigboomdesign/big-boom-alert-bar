@@ -42,7 +42,7 @@ class Alm_Options{
 	 * @param 	string
 	 * @since 	1.0.0
 	 */
-	static $default_section = 'alm_default_alert';
+	static $default_section = 'alm_alert';
 	
 	/**
 	 * Options saved by the user.
@@ -316,14 +316,20 @@ class Alm_Options{
 	static function register_settings(){
 
 		register_setting( 'alm_options', 'alm_options', array('Alm_Options','validate_options'));
+
 		# add sections
 		foreach(Alm_Options::$sections as $section){
 			add_settings_section(
 				$section['name'], $section['title'], array('Alm_Options', 'section_description'), 'alm_settings'
 			);
 		}
+
 		# add fields
 		foreach(Alm_Options::$settings as $setting){
+
+			if( empty( $setting['name'] ) ) continue;
+			if( empty( $setting['label'] ) ) $setting['label'] = $setting['name'];
+
 			add_settings_field($setting['name'], $setting['label'], array('Alm_Options', 'do_settings_field'), 'alm_settings', 
 				array_key_exists('section', $setting) ? $setting['section'] : self::$default_section, $setting
 			);
@@ -443,8 +449,8 @@ class Alm_Options{
 
 # Set up the settings sections for the backend
 Alm_Options::$sections = array(
-	array('name' => 'alm_default_alert', 'title' => 'Default Alert'),
-	array('name' => 'alm_default_advanced', 'title' => 'Default Alert: Advanced Options'),	
+	array('name' => 'alm_alert', 'title' => 'Alert'),
+	array('name' => 'alm_alert_advanced', 'title' => 'Alert: Advanced Options'),	
 	array('name' => 'alm_countdown', 'title' => 'Countdown Timer',
 		'description' => '<p>Use the shortcode <kbd>[alm_countdown]</kbd> to insert the countdown.</p> 
 			<p>If you get the result <kbd>-1</kbd> this means we were unable to successfully produce a timestamp from your input.</p>'
@@ -453,12 +459,13 @@ Alm_Options::$sections = array(
 
 # Set up the available settings fields for the backend
 Alm_Options::$settings = array(
-	# Default Alert
+	
+	# Alert
 	array(
 		'name' => 'show_msg_all', 'label' => 'Insert at the top of every page', 'type' => 'checkbox',
 		'choices' => 'Yes',
 		'description' => 'Please note that if you have fixed-position elements at the top of the &lt;body&gt;, '
-			. 'your alert may not be visible. To bypass our auto-insertion and insert the default alert into a location of your choosing '
+			. 'your alert may not be visible. To bypass our auto-insertion and insert the alert into a location of your choosing '
 			. 'on a single page, post, or widget, you can just use the shortcode <code><b>[alm_alert]</b></code>'
 	),
 	array(
@@ -466,7 +473,7 @@ Alm_Options::$settings = array(
 		'description' => 'Enter a comma-separated list of page/post ID\'s'
 	),	
 	array(
-		'name' => 'default_msg', 'label' => 'Default message', 'type' => 'textarea',
+		'name' => 'default_msg', 'label' => 'Message to display', 'type' => 'textarea',
 		'description' => 'You can use HTML in your message'
 	),
 	array('name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker'),
@@ -474,15 +481,24 @@ Alm_Options::$settings = array(
 	
 	# Advanced Options
 	array('name' => 'more_css', 'label' => 'Additional CSS', 'type' => 'textarea',
-		'description' => 'Type any additional CSS you wish.  Note that the default alert has a container '
+		'description' => 'Type any additional CSS you wish.  Note that the alert has a container '
 			. 'of the form <code><b>div#alm-default-msg</b></code>',
-		'section' => 'alm_default_advanced'
+		'section' => 'alm_alert_advanced'
 	),
 	array('name' => 'dom_element', 'label' => 'Insert into this DOM element',
+		'default' => 'body',
 		'description' => 'By default, the alert is prepended to the <code>&lt;body&gt;</code> tag.  If you\'d like the alert to be ' 
 			. 'inserted elsewhere, specify a valid DOM element with a unique ID like <code><b>#my_div</b></code>.',
-		'section' => 'alm_default_advanced'			
+		'section' => 'alm_alert_advanced'			
 	),
+	array(
+		'name' => 'prepend_or_append', 'type' => 'radio', 
+		'choices' => array( 'Prepend', 'Append' ),
+		'default' => 'prepend',
+		'label' => 'Should the message go at the beginning (prepend) or at the end (append) of the DOM element?',
+		'section' => 'alm_alert_advanced'
+	),
+
 	# Countdown
 	array('name' => 'countdown_date', 'type' => 'text', 'label' => 'Target date',
 		'description' => 'Enter a date in a format like <b>January 1, 1970</b>',
@@ -492,3 +508,11 @@ Alm_Options::$settings = array(
 
 # Get saved options
 Alm_Options::$options = get_option('alm_options');
+
+# load the default values where applicable
+foreach( Alm_Options::$settings as $setting ) {
+	if( ! empty( $setting['default'] ) && empty( Alm_Options::$options[ $setting['name'] ] ) ) {
+
+		Alm_Options::$options[ $setting['name'] ] = $setting['default'];
+	}
+}

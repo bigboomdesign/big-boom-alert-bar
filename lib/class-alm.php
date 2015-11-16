@@ -90,12 +90,13 @@ class Alm {
 		
 		} # end if
 
-		# pass the message to the JS file
+		# pass the necessary settings to the JS file
 		$a = array(
 			'message' => $msg,
 			'bgColor' => ( ! empty( Alm_Options::$options['default_msg_bg_color'] ) ? Alm_Options::$options['default_msg_bg_color'] : '#fff' ),
 			'textColor' => ( ! empty( Alm_Options::$options['default_msg_text_color'] ) ? Alm_Options::$options['default_msg_text_color'] : '#000' ),
-			'domElement' => ( ! empty( Alm_Options::$options['dom_element'] ) ? Alm_Options::$options['dom_element'] : 'body' ),
+			'domElement' => Alm_Options::$options['dom_element'],
+			'prependAppend' => Alm_Options::$options['prepend_or_append'],
 		);
 
 		wp_localize_script('alm-default-msg-js', 'AlmData', $a);
