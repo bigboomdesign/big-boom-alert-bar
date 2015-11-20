@@ -86,8 +86,6 @@ class Alm {
             background-color:" . Alm_Options::$options['default_msg_text_color'] . ";
             color:" . Alm_Options::$options['default_msg_bg_color'] . ";
         }";
-        
-        var_dump($new_style);
 
 		wp_add_inline_style( 'alm-css', $new_style );
 
