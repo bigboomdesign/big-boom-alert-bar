@@ -566,11 +566,13 @@ if( empty( Alert_Bar_Options::$options ) ) {
 foreach( Alert_Bar_Options::$settings as $setting ) {
 
 	# ignore defaults for checkboxes
-	if( $setting['type'] == 'checkbox' ) return;
+	if( ! empty( $setting['type'] ) && $setting['type'] == 'checkbox' ) continue;
 
 	if( empty( Alert_Bar_Options::$options[ $setting['name'] ] ) ) {
 
-		if( ! empty( $setting['default'] ) ) Alert_Bar_Options::$options[ $setting['name'] ] = $setting['default'];
+		if( ! empty( $setting['default'] ) ) {
+			Alert_Bar_Options::$options[ $setting['name'] ] = $setting['default'];
+		}
 		else Alert_Bar_Options::$options[ $setting['name'] ] = '';
 	}
 } # end foreach: plugin settings
