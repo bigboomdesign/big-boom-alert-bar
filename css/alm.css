@@ -12,4 +12,4 @@
 
 /*Hide Box on Alert Bar*/
 #hide-btn { float: right; cursor: pointer; border-radius:3px; }
-#hide-btn .x:hover { border-width:0; }
+#hide-btn span { display:inline-block; }

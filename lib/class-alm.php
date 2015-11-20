@@ -80,7 +80,11 @@ class Alm {
         #hide-btn:hover {
             background-color:" . Alm_Options::$options['default_msg_text_color'] . ";
             color:" . Alm_Options::$options['default_msg_bg_color'] . ";
-        }";
+        } 
+        
+        #hide-btn span:hover {
+        	border-color:" . Alm_Options::$options['default_msg_text_color'] . ";
+    	}";
 
 		wp_add_inline_style( 'alm-css', $new_style );
 
