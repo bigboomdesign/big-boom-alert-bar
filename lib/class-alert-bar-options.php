@@ -5,7 +5,7 @@
  *
  * @since 1.0.0
  */
-class Alm_Options{
+class Alert_Bar_Options{
 
 	/**
 	 * The available settings for the plugin. Initialized in this file, below class definition
@@ -42,7 +42,7 @@ class Alm_Options{
 	 * @param 	string
 	 * @since 	1.0.0
 	 */
-	static $default_section = 'alm_alert';
+	static $default_section = 'albar_alert';
 	
 	/**
 	 * Options saved by the user.
@@ -64,7 +64,7 @@ class Alm_Options{
 	 * @param 	string|array 	$setting{
 	 *
 	 *		Use a string for simple fields. Use an array to pass detailed information about the
-	 *		setting.  Optional types will be auto-completed via `Alm::get_field_array()`
+	 *		setting.  Optional types will be auto-completed via `Alert_Bar::get_field_array()`
 	 *
 	 *		@type 	string 			$label 			Required. The label for the form element	 
 	 * 		@type 	string 			$name 			Optional. The HTML name attribute. Will be auto-generated from label if empty
@@ -78,19 +78,19 @@ class Alm_Options{
 	 * 		@type 	array 			$data 			Optional. An array of data attributes to add to the form element (see `self::data_atts()`)
 	 * }
 	 *
-	 * @param	string	$option 	Optional (Default: 'alm_options'). By default, an HTML input element whose name is `form_field`
-	 *								will actually have a name attribute of `alm_options[form_field]`. Pass in a string to 
+	 * @param	string	$option 	Optional (Default: 'albar_options'). By default, an HTML input element whose name is `form_field`
+	 *								will actually have a name attribute of `albar_options[form_field]`. Pass in a string to 
 	 *								change the default parent field name, or pass an empty string to use a regular input name without a parent
 	 * @since 	1.0.0
 	 */
-	public static function do_settings_field($setting, $option = 'alm_options'){
-		# the option `alm_options` can be replaced on the fly and will be passed to handler functions
+	public static function do_settings_field($setting, $option = 'albar_options'){
+		# the option `albar_options` can be replaced on the fly and will be passed to handler functions
 		$setting['option'] = $option;
 		
 		# fill out missing attributes for this option and its choices
-		$setting = Alm::get_field_array($setting);
+		$setting = Alert_Bar::get_field_array($setting);
 
-		# the arrayed name of this setting, such as `alm_options[my_setting]`
+		# the arrayed name of this setting, such as `albar_options[my_setting]`
 		$setting['option_name'] = (
 			$option ? $option.'['.$setting['name'].']' : $setting['name']
 		);
@@ -135,7 +135,7 @@ class Alm_Options{
 	/**
 	 * Display a text input element
 	 *
-	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
+	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alert_Bar::get_field_array()`
 	 * @since 	1.0.0
 	 */
 	public static function text_field($setting){
@@ -152,7 +152,7 @@ class Alm_Options{
 
 	/**
 	 * Display a textarea element
-	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
+	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alert_Bar::get_field_array()`
 	 * @since 	1.0.0
 	 */
 	public static function textarea_field( $setting ) {
@@ -172,7 +172,7 @@ class Alm_Options{
 	/**
 	 * Display a WYSYWIG input element
 	 *
-	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
+	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alert_Bar::get_field_array()`
 	 * @since 	1.0.0
 	 */
 	public static function wysiwyg_field( $setting ) {
@@ -189,7 +189,7 @@ class Alm_Options{
 
 	/**
 	 * Display one or more checkboxes
-	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
+	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alert_Bar::get_field_array()`
 	 * @since 	1.0.0
 	 */
 	public static function checkbox_field( $setting ) {
@@ -219,7 +219,7 @@ class Alm_Options{
 
 	/**
 	 * Display a group of radio buttons
-	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
+	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alert_Bar::get_field_array()`
 	 * @since 	1.0.0
 	 */
 	public static function radio_field( $setting ) {
@@ -248,7 +248,7 @@ class Alm_Options{
 
 	/**
 	 * Display a <select> dropdown element
-	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
+	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alert_Bar::get_field_array()`
 	 * @since 	1.0.0
 	 */
 	public static function select_field( $setting ) {
@@ -268,12 +268,12 @@ class Alm_Options{
 			# if $choice is a string
 			if(is_string($choice)){
 				$label = $choice;
-				$value = Alm::clean_str_for_field($choice);
+				$value = Alert_Bar::clean_str_for_field($choice);
 			}
 			# if $choice is an array
 			elseif(is_array($choice)){
 				$label = $choice['label'];
-				$value = isset($choice['value']) ? $choice['value'] : Alm::clean_str_for_field($choice['label']);
+				$value = isset($choice['value']) ? $choice['value'] : Alert_Bar::clean_str_for_field($choice['label']);
 			}
 		?>
 			<option 
@@ -292,7 +292,7 @@ class Alm_Options{
 
 	/**
 	 * Display an image upload element that uses the WP Media browser
-	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
+	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alert_Bar::get_field_array()`
 	 * @since 	1.0.0
 	 */
 	public static function image_field( $setting ) {
@@ -315,7 +315,7 @@ class Alm_Options{
 			value='Choose/Upload image'
 			class=	'button button-primary open-media-button single'
 		/>
-		<div id="<?php echo $name; ?>-thumb-preview" class="alm-thumb-preview">
+		<div id="<?php echo $name; ?>-thumb-preview" class="albar-thumb-preview">
 			<?php if($val){ ?><img src="<?php echo $val; ?>" /><?php } ?>
 		</div>
 		<?php
@@ -355,22 +355,22 @@ class Alm_Options{
 	 */
 	static function register_settings(){
 
-		register_setting( 'alm_options', 'alm_options', array('Alm_Options','validate_options'));
+		register_setting( 'albar_options', 'albar_options', array('Alert_Bar_Options','validate_options'));
 
 		# add sections
-		foreach(Alm_Options::$sections as $section){
+		foreach(Alert_Bar_Options::$sections as $section){
 			add_settings_section(
-				$section['name'], $section['title'], array('Alm_Options', 'section_description'), 'alm_settings'
+				$section['name'], $section['title'], array('Alert_Bar_Options', 'section_description'), 'albar_settings'
 			);
 		}
 
 		# add fields
-		foreach(Alm_Options::$settings as $setting){
+		foreach(Alert_Bar_Options::$settings as $setting){
 
 			if( empty( $setting['name'] ) ) continue;
 			if( empty( $setting['label'] ) ) $setting['label'] = $setting['name'];
 
-			add_settings_field($setting['name'], $setting['label'], array('Alm_Options', 'do_settings_field'), 'alm_settings', 
+			add_settings_field($setting['name'], $setting['label'], array('Alert_Bar_Options', 'do_settings_field'), 'albar_settings', 
 				array_key_exists('section', $setting) ? $setting['section'] : self::$default_section, $setting
 			);
 		}	
@@ -381,10 +381,10 @@ class Alm_Options{
 	 */
 	static function settings_page(){
 		?><div>
-			<h2>Alerts & Messages</h2>
+			<h2>Big Boom Alert Bar</h2>
 			<form action="options.php" method="post">
-			<?php settings_fields('alm_options'); ?>
-			<?php do_settings_sections('alm_settings'); ?>
+			<?php settings_fields('albar_options'); ?>
+			<?php do_settings_sections('albar_settings'); ?>
 			<?php submit_button(); ?>
 			</form>
 		</div><?php
@@ -434,10 +434,10 @@ class Alm_Options{
 	 */	
 	public static function get_option_value( $setting, $choice = '' ) {
 
-		# see if an option has been passed in (e.g. `alm_options`)
+		# see if an option has been passed in (e.g. `albar_options`)
 		if($setting['option']){
 			# if we're dealing with the default 
-			if('alm_options' == $setting['option']){
+			if('albar_options' == $setting['option']){
 				$option = self::$options;
 			}
 			
@@ -492,25 +492,25 @@ class Alm_Options{
  */
 
 # Set up the settings sections for the backend
-Alm_Options::$sections = array(
-	array('name' => 'alm_alert', 'title' => 'Alert'),
-	array('name' => 'alm_alert_advanced', 'title' => 'Alert: Advanced Options'),	
-	array('name' => 'alm_countdown', 'title' => 'Countdown Timer',
-		'description' => '<p>Use the shortcode <kbd>[alm_countdown]</kbd> to insert the countdown.</p> 
+Alert_Bar_Options::$sections = array(
+	array('name' => 'albar_alert', 'title' => 'Message'),
+	array('name' => 'albar_alert_advanced', 'title' => 'Advanced Options'),	
+	array('name' => 'albar_countdown', 'title' => 'Countdown Timer',
+		'description' => '<p>Use the shortcode <kbd>[albar_countdown]</kbd> to insert the countdown.</p> 
 			<p>If you get the result <kbd>-1</kbd> this means we were unable to successfully produce a timestamp from your input.</p>'
 	),
 );
 
 # Set up the available settings fields for the backend
-Alm_Options::$settings = array(
+Alert_Bar_Options::$settings = array(
 	
-	# Alert
+	# Message
 	array(
 		'name' => 'show_msg_all', 'label' => 'Insert at the top of every page', 'type' => 'checkbox',
 		'choices' => 'Yes',
 		'description' => 'Please note that if you have fixed-position elements at the top of the &lt;body&gt;, '
 			. 'your alert may not be visible. To bypass our auto-insertion and insert the alert into a location of your choosing '
-			. 'on a single page, post, or widget, you can just use the shortcode <code><b>[alm_alert]</b></code>.'
+			. 'on a single page, post, or widget, you can just use the shortcode <code><b>[albar_alert]</b></code>.'
 	),
 	array(
 		'name' => 'show_msg_home', 'label' => 'Show message on home page', 'type' => 'checkbox',
@@ -536,42 +536,51 @@ Alm_Options::$settings = array(
 	# Advanced Options
 	array('name' => 'more_css', 'label' => 'Additional CSS', 'type' => 'textarea',
 		'description' => 'Type any additional CSS you wish.  Note that the alert has a container '
-			. 'of the form <code><b>div#alm-default-msg</b></code>',
-		'section' => 'alm_alert_advanced'
+			. 'of the form <code><b>div#alert-bar-msg</b></code>',
+		'section' => 'albar_alert_advanced'
 	),
 	array('name' => 'dom_element', 'label' => 'Insert into this DOM element',
 		'default' => 'body',
 		'description' => 'By default, the alert is prepended to the <code>&lt;body&gt;</code> tag.  If you\'d like the alert to be ' 
 			. 'inserted elsewhere, specify a valid DOM element with a unique ID like <code><b>#my_div</b></code>.',
-		'section' => 'alm_alert_advanced'			
+		'section' => 'albar_alert_advanced'			
 	),
 	array(
 		'name' => 'prepend_or_append', 'type' => 'radio', 
 		'choices' => array( 'Prepend', 'Append' ),
 		'default' => 'prepend',
 		'label' => 'Should the message go at the beginning (prepend) or at the end (append) of the DOM element?',
-		'section' => 'alm_alert_advanced'
+		'section' => 'albar_alert_advanced'
 	),
 
 	# Countdown
 	array('name' => 'countdown_date', 'type' => 'text', 'label' => 'Target date',
 		'description' => 'Enter a date in a format like <b>January 1, 1970</b>',
-		'section' => 'alm_countdown',
+		'section' => 'albar_countdown',
 	)
 );
 
 # Get saved options
-Alm_Options::$options = get_option('alm_options');
+Alert_Bar_Options::$options = get_option('albar_options');
+
+# check for older version options
+if( empty( Alert_Bar_Options::$options ) ) {
+
+	$old_option = get_option('alm_options');
+	if( $old_option ) {
+		Alert_Bar_Options::$options = $old_option;
+	}
+}
 
 # load the default values where applicable
-foreach( Alm_Options::$settings as $setting ) {
+foreach( Alert_Bar_Options::$settings as $setting ) {
 
 	# ignore defaults for checkboxes
 	if( $setting['type'] == 'checkbox' ) return;
 
-	if( empty( Alm_Options::$options[ $setting['name'] ] ) ) {
+	if( empty( Alert_Bar_Options::$options[ $setting['name'] ] ) ) {
 
-		if( ! empty( $setting['default'] ) ) Alm_Options::$options[ $setting['name'] ] = $setting['default'];
-		else Alm_Options::$options[ $setting['name'] ] = '';
+		if( ! empty( $setting['default'] ) ) Alert_Bar_Options::$options[ $setting['name'] ] = $setting['default'];
+		else Alert_Bar_Options::$options[ $setting['name'] ] = '';
 	}
 } # end foreach: plugin settings

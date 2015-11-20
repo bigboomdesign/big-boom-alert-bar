@@ -25,7 +25,7 @@ You can specify where the alert should go within your site layout in a few diffe
 
 * Use any unique CSS-style selector (e.g. #my-div) to choose where to insert the message, or leave this blank to insert at the top of your site's body
 * Choose to insert the alert message either before or after your chosen page element (default is before)
-* Use the shortcode [alm_alert] to insert the message anywhere within the content of any page or post
+* Use the shortcode [albar_alert] to insert the message anywhere within the content of any page or post
 
 
 = Locations =
@@ -36,13 +36,10 @@ The plugin gives you several choices as to which screens should show your messag
 * Show on the home page (whether it be a page or your recent posts)
 * Show for only certain page/post ID's
 
-= Countdown Timer =
-
-Currently the countdown timer displays a simple day countdown as a shortcode, and you need to create your own context around the displayed number.
 
 == Installation ==
 
 * Go To Plugins >> Add New
 * Either search for "Big Boom" or Upload the .zip file downloaded here.
-* Once installed, go to the `Settings > Alerts & Messages` admin menu item and choose your settings.
-* You can use the plugin settings to determine which pages the alerts show, or you can use the shortcode [alm_alert] within a page or post.
+* Once installed, go to the `Settings > Alert Bar` admin menu item and choose your settings.
+* You can use the plugin settings to determine which pages the alerts show, or you can use the shortcode [albar_alert] within a page or post.

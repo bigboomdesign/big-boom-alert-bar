@@ -3,19 +3,19 @@
  */
 
 // the message we are displaying
-var message = AlmData.message;
+var message = AlertBarData.message;
 
 // the container's background color
-var bgColor = AlmData.bgColor;
+var bgColor = AlertBarData.bgColor;
 
 // the text color for the message
-var textColor = AlmData.textColor;
+var textColor = AlertBarData.textColor;
 
 // the DOM element to use for the jQuery selector, to determine where the message will be inserted
-var domElement = AlmData.domElement;
+var domElement = AlertBarData.domElement;
 
 // whether to prepend or append the message
-var prependAppend = AlmData.prependAppend;
+var prependAppend = AlertBarData.prependAppend;
 
 jQuery(document).ready(function($){
 
@@ -24,7 +24,7 @@ jQuery(document).ready(function($){
 	if( $element.length !== 1 ) return;
 
 	// the complete HTML for the message we're inserting
-	var messageHTML = '<div id="alm-default-msg" ' + 
+	var messageHTML = '<div id="alert-bar-msg" ' + 
 			' style="background: ' + bgColor + '; ' + 
 			' color: ' + textColor + 
 		'">' + 
@@ -43,14 +43,14 @@ jQuery(document).ready(function($){
 	$( document ).on( 'click', '#hide-btn', function() {
 
 		// the alert bar element
-		var $almBar = $('#alm-default-msg');
+		var $alBar = $('#alert-bar-msg');
 
-  		$almBar.css({
+  		$alBar.css({
   			opacity: '0',
   			transition: 'all 1s ease'
   		});
   		setTimeout(  function() {
-			$almBar.css({display: 'none'});
+			$alBar.css({display: 'none'});
   		}, 1000);
 
 	}); // end onclick: hide button

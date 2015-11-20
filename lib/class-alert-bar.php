@@ -6,7 +6,7 @@
  *
  * @since 	1.0.0
  */
-class Alm {
+class Alert_Bar {
 
 	/**
 	 * Whether or not we are displaying debug messages
@@ -22,7 +22,7 @@ class Alm {
 	 * @param 	array
 	 * @since 	1.0.0
 	 */
-	static $classes = array( "alm-options" );
+	static $classes = array( "alert-bar-options" );
 
 	/**
 	 * Back end
@@ -38,12 +38,12 @@ class Alm {
 	static function admin_enqueue() {
 
 		$screen = get_current_screen();
-		if( $screen->id != 'settings_page_alm_settings' ) return;
+		if( $screen->id != 'settings_page_albar_settings' ) return;
 		
-		wp_enqueue_style( 'alm-admin-css', alm_url('/css/alm-admin.css') );
+		wp_enqueue_style( 'albar-admin-css', albar_url('/css/albar-admin.css') );
 		
 		wp_enqueue_script( 'iris' );
-		wp_enqueue_script( 'alm-options-js', alm_url('/js/admin/plugin-options.js'), array( 'jquery', 'iris' ) );
+		wp_enqueue_script( 'albar-options-js', albar_url('/js/admin/plugin-options.js'), array( 'jquery', 'iris' ) );
 		
 	} # end: admin_enqueue()
 
@@ -63,63 +63,63 @@ class Alm {
 	static function default_message() {
 
 		# Check if we have a message in the system
-		if( empty ( $msg = Alm_Options::$options['default_msg'] ) ) return;
+		if( empty ( $msg = Alert_Bar_Options::$options['default_msg'] ) ) return;
 
 		# Check if we need to show the message on this page
 		if( ! self::alert_should_show() ) return;
 
-		wp_enqueue_style( 'alm-css', alm_url( '/css/alm.css' ) );
+		wp_enqueue_style( 'albar-css', albar_url( '/css/albar.css' ) );
 		
-		wp_enqueue_script( 'alm-default-msg-js', alm_url( '/js/alm-default-msg.js' ), array( 'jquery' ) );
+		wp_enqueue_script( 'albar-default-msg-js', albar_url( '/js/albar-default-msg.js' ), array( 'jquery' ) );
 		
-		if( $more_css = Alm_Options::$options['more_css'] ) {
-			wp_add_inline_style( 'alm-css', $more_css );
+		if( $more_css = Alert_Bar_Options::$options['more_css'] ) {
+			wp_add_inline_style( 'albar-css', $more_css );
 		} # end if
 
 		$new_style = "
         #hide-btn:hover {
-            background-color:" . Alm_Options::$options['default_msg_text_color'] . ";
-            color:" . Alm_Options::$options['default_msg_bg_color'] . ";
+            background-color:" . Alert_Bar_Options::$options['default_msg_text_color'] . ";
+            color:" . Alert_Bar_Options::$options['default_msg_bg_color'] . ";
         } 
         
         #hide-btn span:hover {
-        	border-color:" . Alm_Options::$options['default_msg_text_color'] . ";
+        	border-color:" . Alert_Bar_Options::$options['default_msg_text_color'] . ";
     	}";
 
-		wp_add_inline_style( 'alm-css', $new_style );
+		wp_add_inline_style( 'albar-css', $new_style );
 
 		# pass the necessary settings to the JS file
 		$a = array(
 			'message' => $msg,
-			'bgColor' => Alm_Options::$options['default_msg_bg_color'],
-			'textColor' => Alm_Options::$options['default_msg_text_color'],
-			'domElement' => Alm_Options::$options['dom_element'],
-			'prependAppend' => Alm_Options::$options['prepend_or_append'],
+			'bgColor' => Alert_Bar_Options::$options['default_msg_bg_color'],
+			'textColor' => Alert_Bar_Options::$options['default_msg_text_color'],
+			'domElement' => Alert_Bar_Options::$options['dom_element'],
+			'prependAppend' => Alert_Bar_Options::$options['prepend_or_append'],
 		);
 
-		wp_localize_script('alm-default-msg-js', 'AlmData', $a);
+		wp_localize_script('albar-default-msg-js', 'AlertBarData', $a);
 
 	} # end: default_message()
 	
 	/**
-	* Callback for shortcode [alm_alert]
+	* Callback for shortcode [albar_alert]
 	*
 	* @since 1.0.0
 	*/
 	static function do_alert(){
 		
-		extract( Alm_Options::$options );
+		extract( Alert_Bar_Options::$options );
 		if( ! $default_msg ) return;
 
 		# start the output buffer
 		ob_start();
 
 	?>
-		<link href="<?php echo alm_url('/css/alm.css'); ?>" rel='stylesheet'/>
+		<link href="<?php echo albar_url('/css/albar.css'); ?>" rel='stylesheet'/>
 		<?php if( $more_css ) { ?><style><?php echo $more_css; ?></style><?php } ?>
 
 		<div
-			id='alm-default-msg'
+			id='alert-bar-msg'
 			style="<?php 
 				if($default_msg_text_color) echo 'color: '.$default_msg_text_color.'; '; 
 				if($default_msg_bg_color) echo 'background: '.$default_msg_bg_color.'; ';
@@ -137,7 +137,7 @@ class Alm {
 	} # end: do_alert()
 
 	/**
-	* Callback for shortcode [alm_countdown]
+	* Callback for shortcode [albar_countdown]
 	*
 	* @return 	( string | integer ) 	$days 	Returns day count, or -1 if there was an error
 	*
@@ -152,12 +152,12 @@ class Alm {
 		$now = $now - ( 5*60*60 );
 		
 		# try to get timestamp from date specified in options
-		if( ! Alm_Options::$options ) return '-1';
+		if( ! Alert_Bar_Options::$options ) return '-1';
 
 		# start the output buffer
 		ob_start();
 
-		extract( Alm_Options::$options );		
+		extract( Alert_Bar_Options::$options );		
 		
 		$target = strtotime( $countdown_date );		
 		
@@ -189,7 +189,7 @@ class Alm {
 		$days = ceil( $days );
 
 		# return the day count
-		echo '<span id="alm-countdown-timer">' . ceil( $days ) . '</span>';
+		echo '<span id="albar-countdown-timer">' . ceil( $days ) . '</span>';
 
 		# return buffer contents
 		$html = ob_get_contents();
@@ -218,10 +218,10 @@ class Alm {
 	static function alert_should_show() {
 
 		# if showing on all pages
-		if( isset( Alm_Options::$options['show_msg_all_yes'] ) ) return true;
+		if( isset( Alert_Bar_Options::$options['show_msg_all_yes'] ) ) return true;
 
 		# if showing on home page
-		if( isset( Alm_Options::$options['show_msg_home_yes'] ) ) {
+		if( isset( Alert_Bar_Options::$options['show_msg_home_yes'] ) ) {
 
 			if( 
 				( is_home() && 'posts' == get_option( 'show_on_front' ) )
@@ -232,7 +232,7 @@ class Alm {
 		} # end if: showing on home page
 
 		# if only showing on certain pages
-		if( $sIds = Alm_Options::$options['show_msg_page_ids'] ) {
+		if( $sIds = Alert_Bar_Options::$options['show_msg_page_ids'] ) {
 
 			$aIds = explode( ',', $sIds );
 
@@ -404,7 +404,7 @@ class Alm {
 
 	} # end: get_choice_array()
 
-} # end class Alm
+} # end class Alert_Bar
 
 # require files for plugin
-foreach(Alm::$classes as $class){ Alm::req_file(alm_dir("lib/class-{$class}.php")); }
+foreach(Alert_Bar::$classes as $class){ Alert_Bar::req_file(albar_dir("lib/class-{$class}.php")); }
