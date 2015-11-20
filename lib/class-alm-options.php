@@ -481,8 +481,14 @@ Alm_Options::$settings = array(
 		'name' => 'default_msg', 'label' => 'Message to display', 'type' => 'textarea',
 		'description' => 'You can use HTML in your message'
 	),
-	array('name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker'),
-	array('name' => 'default_msg_text_color', 'label' => 'Text Color', 'class' => 'color-picker'),
+	array(
+		'name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker',
+		'default' => '#fff',
+	),
+	array(
+		'name' => 'default_msg_text_color', 'label' => 'Text Color', 'class' => 'color-picker',
+		'default' => '#000',
+	),
 	
 	# Advanced Options
 	array('name' => 'more_css', 'label' => 'Additional CSS', 'type' => 'textarea',
@@ -516,8 +522,13 @@ Alm_Options::$options = get_option('alm_options');
 
 # load the default values where applicable
 foreach( Alm_Options::$settings as $setting ) {
-	if( ! empty( $setting['default'] ) && empty( Alm_Options::$options[ $setting['name'] ] ) ) {
 
-		Alm_Options::$options[ $setting['name'] ] = $setting['default'];
+	# ignore defaults for checkboxes
+	if( $setting['type'] == 'checkbox' ) return;
+
+	if( empty( Alm_Options::$options[ $setting['name'] ] ) ) {
+
+		if( ! empty( $setting['default'] ) ) Alm_Options::$options[ $setting['name'] ] = $setting['default'];
+		else Alm_Options::$options[ $setting['name'] ] = '';
 	}
-}
+} # end foreach: plugin settings

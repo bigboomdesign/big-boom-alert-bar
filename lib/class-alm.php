@@ -61,7 +61,7 @@ class Alm {
 	 */
 
 	/**
-	 * Check if we have a message in place, if not display a default message
+	 * Display the alert message (non-shortcode method)
 	 *
 	 * @since 1.0.0
 	 */
@@ -84,8 +84,8 @@ class Alm {
 		# pass the necessary settings to the JS file
 		$a = array(
 			'message' => $msg,
-			'bgColor' => ( ! empty( Alm_Options::$options['default_msg_bg_color'] ) ? Alm_Options::$options['default_msg_bg_color'] : '#fff' ),
-			'textColor' => ( ! empty( Alm_Options::$options['default_msg_text_color'] ) ? Alm_Options::$options['default_msg_text_color'] : '#000' ),
+			'bgColor' => Alm_Options::$options['default_msg_bg_color'],
+			'textColor' => Alm_Options::$options['default_msg_text_color'],
 			'domElement' => Alm_Options::$options['dom_element'],
 			'prependAppend' => Alm_Options::$options['prepend_or_append'],
 		);
@@ -363,7 +363,7 @@ class Alm {
 	 * @since 	1.0.0
 	 */
 	static function get_choice_array( $setting ) {
-		
+
 		extract($setting);
 		if(!isset($choices)) return;
 		$out = array();
