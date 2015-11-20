@@ -40,16 +40,11 @@ class Alm {
 		$screen = get_current_screen();
 		if( $screen->id != 'settings_page_alm_settings' ) return;
 		
-		wp_enqueue_style('alm-admin-css', alm_url('/css/alm-admin.css'));
-		wp_enqueue_style('alm-iris-css', alm_url('/assets/iris/iris.min.css'));
+		wp_enqueue_style( 'alm-admin-css', alm_url('/css/alm-admin.css') );
 		
-		wp_enqueue_script('alm-options-js', alm_url('/js/admin/plugin-options.js'), array('jquery', 'alm-iris-js'));
+		wp_enqueue_script( 'iris' );
+		wp_enqueue_script( 'alm-options-js', alm_url('/js/admin/plugin-options.js'), array( 'jquery', 'iris' ) );
 		
-		wp_enqueue_media();
-		
-		wp_enqueue_script('alm-jquery-ui-js', alm_url('/assets/iris/jquery-ui.js'), array('jquery', 'media-views'));
-		wp_enqueue_script('alm-iris-js', alm_url('/assets/iris/iris.min.js'), array('jquery', 'alm-jquery-ui-js'));	
-
 	} # end: admin_enqueue()
 
 	/**
@@ -194,6 +189,8 @@ class Alm {
 
 		# return buffer contents
 		$html = ob_get_contents();
+		ob_end_clean();
+
 		return $html;
 	
 	} # end: do_countdown()

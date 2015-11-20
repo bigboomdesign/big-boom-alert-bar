@@ -104,21 +104,24 @@ class Alm_Options{
 		## special cases
 		switch($setting['type']){
 			case "textarea":
-				self::textarea_field($setting);
+				self::textarea_field( $setting );
+			break;
+			case 'wysiwyg':
+				self::wysiwyg_field( $setting );
 			break;
 			case 'checkbox':
-				self::checkbox_field($setting);
+				self::checkbox_field( $setting );
 			break;
 			case 'select':
-				self::select_field($setting);
+				self::select_field( $setting );
 			break;
 			case 'radio':
-				self::radio_field($setting);
+				self::radio_field( $setting );
 			break;			
 			case "single-image":
-				self::image_field($setting);
+				self::image_field( $setting );
 			break;
-			default: self::text_field($setting);
+			default: self::text_field( $setting );
 		} # end switch: setting type
 		
 		if(array_key_exists('description', $setting)) {
@@ -152,7 +155,8 @@ class Alm_Options{
 	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
 	 * @since 	1.0.0
 	 */
-	public static function textarea_field($setting){
+	public static function textarea_field( $setting ) {
+
 		extract($setting);
 		$val = self::get_option_value($setting);	
 		?><textarea 
@@ -162,32 +166,55 @@ class Alm_Options{
 			<?php echo self::data_atts($setting); ?>
 		><?php echo $val; ?></textarea>
 		<?php
+
 	} # end: textarea_field()
+
+	/**
+	 * Display a WYSYWIG input element
+	 *
+	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
+	 * @since 	1.0.0
+	 */
+	public static function wysiwyg_field( $setting ) {
+
+		extract( $setting );
+
+		$val = self::get_option_value( $setting );
+
+		wp_editor( $val, $setting['name'], array( 
+			'textarea_name' => $setting['option_name'],
+			'wpautop'	=> false,
+		));
+	} # end: wysiwyg_field()
 
 	/**
 	 * Display one or more checkboxes
 	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
 	 * @since 	1.0.0
 	 */
-	public static function checkbox_field($setting){
-		extract($setting);
-		foreach($choices as $choice){
-		?><label 
-			class="checkbox <?php if(isset($label_class)) echo $label_class; ?>"
-			for="<?php echo $choice['id']; ?>"
-		>
-			<input 
-				type='checkbox'
-				id="<?php echo $choice['id']; ?>"
-				name="<?php echo self::get_choice_name($setting, $choice); ?>"
-				value="<?php echo $choice['value']; ?>"
-				class="<?php if(isset($class)) echo $class; if(array_key_exists('class', $choice)) echo ' ' . $choice['class']; ?>"
-				<?php echo self::data_atts($choice); ?>
-				<?php checked(true, '' != self::get_option_value($setting, $choice)); ?>						
-			/>&nbsp;<?php echo $choice['label']; ?> &nbsp; &nbsp;
-		</label>
+	public static function checkbox_field( $setting ) {
+
+		extract( $setting );
+
+		foreach( $choices as $choice ) {
+		?>
+			<label 
+				class="checkbox <?php if(isset($label_class)) echo $label_class; ?>"
+				for="<?php echo $choice['id']; ?>"
+			>
+				<input 
+					type='checkbox'
+					id="<?php echo $choice['id']; ?>"
+					name="<?php echo self::get_choice_name($setting, $choice); ?>"
+					value="<?php echo $choice['value']; ?>"
+					class="<?php if(isset($class)) echo $class; if(array_key_exists('class', $choice)) echo ' ' . $choice['class']; ?>"
+					<?php echo self::data_atts($choice); ?>
+					<?php checked(true, '' != self::get_option_value($setting, $choice)); ?>						
+				/>&nbsp;<?php echo $choice['label']; ?> &nbsp; &nbsp;
+			</label>
 		<?php
-		}
+		} # end foreach: setting choices
+
 	} # end: checkbox_field()
 
 	/**
@@ -195,9 +222,12 @@ class Alm_Options{
 	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
 	 * @since 	1.0.0
 	 */
-	public static function radio_field($setting){
-		extract($setting);
-		$val = self::get_option_value($setting);
+	public static function radio_field( $setting ) {
+
+		extract( $setting );
+
+		$val = self::get_option_value( $setting );
+
 		foreach($choices as $choice){
 				$label = $choice['label']; 
 				$value = $choice['value'];
@@ -221,9 +251,12 @@ class Alm_Options{
 	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
 	 * @since 	1.0.0
 	 */
-	public static function select_field($setting){		
+	public static function select_field( $setting ) {
+
 		extract($setting);
-		$val = self::get_option_value($setting);
+
+		$val = self::get_option_value( $setting );
+
 	?><select 
 		id="<?php echo $name; ?>"
 		name="<?php echo $setting['option_name']; ?>"
@@ -254,6 +287,7 @@ class Alm_Options{
 		?>
 		
 	</select><?php
+
 	} # end: select_field()
 
 	/**
@@ -261,10 +295,13 @@ class Alm_Options{
 	 * @param 	array 	$setting 	See `do_settings_field()`. Has been filtered through `Alm::get_field_array()`
 	 * @since 	1.0.0
 	 */
-	public static function image_field($setting){
+	public static function image_field( $setting ) {
+
 		# this will set $name for the field
 		extract($setting);
+		
 		$val = self::get_option_value($setting);
+		
 		# current value for the field
 		?><input 
 			type='text'
@@ -282,6 +319,7 @@ class Alm_Options{
 			<?php if($val){ ?><img src="<?php echo $val; ?>" /><?php } ?>
 		</div>
 		<?php
+
 	} # end: image_field()
 
 	/**
@@ -299,13 +337,15 @@ class Alm_Options{
 	 * @return 	string
 	 * @since 	1.0.0
 	 */
-	 public static function data_atts($setting){
+	 public static function data_atts( $setting ) {
+
 		if(!array_key_exists('data', $setting)) return;
 		$out = '';
 		foreach($setting['data'] as $k => $v){
 			$out .= "data-{$k}='{$v}' ";
 		}
 		return $out;
+
 	} # end: data_atts()
 
 	/**
@@ -356,7 +396,8 @@ class Alm_Options{
 	 *
 	 * @since 	1.0.0
  	 */
-	static function section_description($section){
+	static function section_description( $section ) {
+
 		# get ID of section being displayed
 		$id = $section['id'];
 		# loop through sections and display the correct description
@@ -391,7 +432,8 @@ class Alm_Options{
 	 * @return 	string
 	 * @since 	1.0.0
 	 */	
-	public static function get_option_value($setting, $choice = ''){
+	public static function get_option_value( $setting, $choice = '' ) {
+
 		# see if an option has been passed in (e.g. `alm_options`)
 		if($setting['option']){
 			# if we're dealing with the default 
@@ -420,7 +462,9 @@ class Alm_Options{
 			}
 			# if option value is a string
 			return $option;
-		}
+
+		} # end if: setting has an option name
+
 		# if no option is passed in, check post
 		if( isset( $_POST[ $setting['name'] ] ) )
 			return sanitize_text_field( $_POST[ $setting[ 'name' ] ] );
@@ -478,8 +522,7 @@ Alm_Options::$settings = array(
 		'description' => 'Enter a comma-separated list of page/post ID\'s where the alert should be shown.'
 	),
 	array(
-		'name' => 'default_msg', 'label' => 'Message to display', 'type' => 'textarea',
-		'description' => 'You can use HTML in your message'
+		'name' => 'default_msg', 'label' => 'Message to display', 'type' => 'wysiwyg',
 	),
 	array(
 		'name' => 'default_msg_bg_color', 'label' => 'Background Color', 'class' => 'color-picker',
