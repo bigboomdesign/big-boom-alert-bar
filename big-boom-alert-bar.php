@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Big Boom Alert Bar
- * Description: Displays alerts and messages on your site, including a countdown timer
- * Version: 0.5.0
+ * Description: Displays an alert message anywhere on your site
+ * Version: 0.5.1
  * Author: Big Boom Design
  * Author URI: http://bigboomdesign.com
  */
@@ -41,9 +41,6 @@ else{
 	# Shortcodes
 	## alert
 	add_shortcode( 'albar_alert', array('Alert_Bar', 'do_alert' ) );
-	
-	## countdown
-	add_shortcode( 'albar_countdown', array('Alert_Bar', 'do_countdown' ) );
 
 } # end: front end routines
 #end main routine

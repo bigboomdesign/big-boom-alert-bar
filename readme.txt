@@ -1,12 +1,12 @@
 === Big Boom Alert Bar ===
 Contributors: bigboomdesign, michaelhull, GregGay
-Tags: alert, message, countdown, timer, site notification
+Tags: alert, message, site notification
 Requires at least: 4.0
 Tested up to: 4.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Adds an alert message or countdown timer to your site's front end, anywhere within the site layout
+Adds an alert message to your site's front end, anywhere within the site layout
 
 == Description ==
 

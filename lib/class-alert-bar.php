@@ -52,7 +52,6 @@ class Alert_Bar {
 	 *
 	 * - default_message()
 	 * - do_alert()
-	 * - do_countdown()
 	 */
 
 	/**
@@ -135,69 +134,6 @@ class Alert_Bar {
 		return $html;
 	
 	} # end: do_alert()
-
-	/**
-	* Callback for shortcode [albar_countdown]
-	*
-	* @return 	( string | integer ) 	$days 	Returns day count, or -1 if there was an error
-	*
-	* @since 1.0.0
-	*/
-	static function do_countdown() {
-		
-		# current timestamp
-		$now = time();
-
-		# Eastern timezone is UTC -5
-		$now = $now - ( 5*60*60 );
-		
-		# try to get timestamp from date specified in options
-		if( ! Alert_Bar_Options::$options ) return '-1';
-
-		# start the output buffer
-		ob_start();
-
-		extract( Alert_Bar_Options::$options );		
-		
-		$target = strtotime( $countdown_date );		
-		
-		if( self::$debug ) { 
-
-			echo "You entered: " . $countdown_date."<br />";
-			echo "We got: "; var_dump($target); echo "<br />"; 
-		
-		?>
-
-			<p>Right now: <?php echo date('j M Y h:i:sA', $now); ?></p>		
-
-		<?php
-
-		} # end if
-		
-		# make sure date is in the future
-		$time = $target - $now;
-
-		if( $time <= 0 ) { 
-			if( self::$debug ) echo 'Please pick a date in the future';
-			echo '-1';
-		} # end if
-
-		# get number of days based on number of seconds
-		$days = $time / ( 60*60*24 );
-
-		# round up
-		$days = ceil( $days );
-
-		# return the day count
-		echo '<span id="albar-countdown-timer">' . ceil( $days ) . '</span>';
-
-		# return buffer contents
-		$html = ob_get_contents();
-		ob_end_clean();
-
-		return $html;
-	
-	} # end: do_countdown()
 	
 	/**
 	 * Helper Functions

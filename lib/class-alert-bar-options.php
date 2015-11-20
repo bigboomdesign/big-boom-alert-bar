@@ -495,10 +495,6 @@ class Alert_Bar_Options{
 Alert_Bar_Options::$sections = array(
 	array('name' => 'albar_alert', 'title' => 'Message'),
 	array('name' => 'albar_alert_advanced', 'title' => 'Advanced Options'),	
-	array('name' => 'albar_countdown', 'title' => 'Countdown Timer',
-		'description' => '<p>Use the shortcode <kbd>[albar_countdown]</kbd> to insert the countdown.</p> 
-			<p>If you get the result <kbd>-1</kbd> this means we were unable to successfully produce a timestamp from your input.</p>'
-	),
 );
 
 # Set up the available settings fields for the backend
@@ -552,12 +548,6 @@ Alert_Bar_Options::$settings = array(
 		'label' => 'Should the message go at the beginning (prepend) or at the end (append) of the DOM element?',
 		'section' => 'albar_alert_advanced'
 	),
-
-	# Countdown
-	array('name' => 'countdown_date', 'type' => 'text', 'label' => 'Target date',
-		'description' => 'Enter a date in a format like <b>January 1, 1970</b>',
-		'section' => 'albar_countdown',
-	)
 );
 
 # Get saved options
