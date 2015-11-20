@@ -36,13 +36,14 @@ if(is_admin()){
 # Front end routines
 else{
 	# Default message
-	add_action('wp', array('Alm','default_message'));
+	add_action( 'wp', array( 'Alm','default_message' ) );
 
 	# Shortcodes
 	## alert
-	add_shortcode('alm_alert', array('Alm', 'do_alert'));
+	add_shortcode( 'alm_alert', array('Alm', 'do_alert' ) );
+	
 	## countdown
-	add_shortcode('alm_countdown', array('Alm', 'do_countdown'));
+	add_shortcode( 'alm_countdown', array('Alm', 'do_countdown' ) );
 
 } # end: front end routines
 #end main routine

@@ -1,15 +1,37 @@
 <?php
+/**
+ * Includes the dependency classes for the plugin
+ * Handles callbacks for basic WP hooks
+ * Handles callbacks for shortcodes
+ *
+ * @since 	1.0.0
+ */
 class Alm {
-	# set to true for debugging
+
+	/**
+	 * Whether or not we are displaying debug messages
+	 *
+	 * @param 	bool
+	 * @since 	1.0.0
+	 */
 	static $debug = false;
+
+	/**
+	 * The dependency classes to be included
+	 *
+	 * @param 	array
+	 * @since 	1.0.0
+	 */
 	static $classes = array( "alm-options" );
 
 	/**
 	 * Back end
+	 * 
+	 * - admin_enqueue()
 	 */
 
 	/**
-	 * Enqueue admin scripts
+	 * Enqueue scripts on the admin side
 	 * 
 	 * @since 1.0.0
 	 */
@@ -28,21 +50,15 @@ class Alm {
 		wp_enqueue_script('alm-jquery-ui-js', alm_url('/assets/iris/jquery-ui.js'), array('jquery', 'media-views'));
 		wp_enqueue_script('alm-iris-js', alm_url('/assets/iris/iris.min.js'), array('jquery', 'alm-jquery-ui-js'));	
 
-	} # end admin_enqueue()
+	} # end: admin_enqueue()
 
 	/**
-	* Front end
-	**/
-	
-	/**
-	 * Enqueue front end scripts 
+	 * Front end
 	 *
-	 * @since 1.0.0
+	 * - default_message()
+	 * - do_alert()
+	 * - do_countdown()
 	 */
-	static function enqueue() { 
-
-	} # end enqueue()
-
 
 	/**
 	 * Check if we have a message in place, if not display a default message
@@ -76,10 +92,10 @@ class Alm {
 
 		wp_localize_script('alm-default-msg-js', 'AlmData', $a);
 
-	} # end default_message()
+	} # end: default_message()
 	
 	/**
-	* shortcode [alm_alert]
+	* Callback for shortcode [alm_alert]
 	*
 	* @since 1.0.0
 	*/
@@ -87,6 +103,9 @@ class Alm {
 		
 		extract( Alm_Options::$options );
 		if( ! $default_msg ) return;
+
+		# start the output buffer
+		ob_start();
 
 	?>
 		<link href="<?php echo alm_url('/css/alm.css'); ?>" rel='stylesheet'/>
@@ -98,14 +117,20 @@ class Alm {
 				if($default_msg_text_color) echo 'color: '.$default_msg_text_color.'; '; 
 				if($default_msg_bg_color) echo 'background: '.$default_msg_bg_color.'; ';
 			?>"		
-		><?php echo $default_msg; ?></div>
+		><?php echo $default_msg; ?>
+		</div>
+		<?php
 
-	<?php
+		# return buffer contents
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		return $html;
 	
-	} # end do_alert()
+	} # end: do_alert()
 
 	/**
-	* shortcode [alm_countdown]
+	* Callback for shortcode [alm_countdown]
 	*
 	* @return 	( string | integer ) 	$days 	Returns day count, or -1 if there was an error
 	*
@@ -121,6 +146,9 @@ class Alm {
 		
 		# try to get timestamp from date specified in options
 		if( ! Alm_Options::$options ) return '-1';
+
+		# start the output buffer
+		ob_start();
 
 		extract( Alm_Options::$options );		
 		
@@ -144,7 +172,7 @@ class Alm {
 
 		if( $time <= 0 ) { 
 			if( self::$debug ) echo 'Please pick a date in the future';
-			return '-1';
+			echo '-1';
 		} # end if
 
 		# get number of days based on number of seconds
@@ -154,12 +182,23 @@ class Alm {
 		$days = ceil( $days );
 
 		# return the day count
-		return ceil( $days );
+		echo '<span id="alm-countdown-timer">' . ceil( $days ) . '</span>';
+
+		# return buffer contents
+		$html = ob_get_contents();
+		return $html;
 	
-	} # end do_countdown
+	} # end: do_countdown()
 	
 	/**
 	 * Helper Functions
+	 *
+	 * - alert_should_show()
+	 * - req_file()
+	 * - clean_str_for_url()
+	 * - clean_str_for_field()
+	 * - get_field_array()
+	 * - get_choice_array()
 	 */
 
 	/**
@@ -204,48 +243,90 @@ class Alm {
 
 	} # end: alert_should_show()
 
-	# require a file, checking first if it exists
-	static function req_file($path){ if(file_exists($path)) require_once $path; }
+	/**
+	 * Require a file, checking first if it exists
+	 *
+	 * @param 	string 	$path 	The file path to be required
+	 * @since 	1.0.0
+	 */
+	static function req_file( $path ){ if( file_exists($path) ) require_once $path; }
 	
-	# return a permalink-friendly version of a string
-	static function clean_str_for_url( $sIn ){
-		if( $sIn == "" ) return "";
-		$sOut = trim( strtolower( $sIn ) );
-		$sOut = preg_replace( "/\s\s+/" , " " , $sOut );					
-		$sOut = preg_replace( "/[^a-zA-Z0-9 -]/" , "",$sOut );	
-		$sOut = preg_replace( "/--+/" , "-",$sOut );
-		$sOut = preg_replace( "/ +- +/" , "-",$sOut );
-		$sOut = preg_replace( "/\s\s+/" , " " , $sOut );	
-		$sOut = preg_replace( "/\s/" , "-" , $sOut );
-		$sOut = preg_replace( "/--+/" , "-" , $sOut );
-		$nWord_length = strlen( $sOut );
-		if( $sOut[ $nWord_length - 1 ] == "-" ) { $sOut = substr( $sOut , 0 , $nWord_length - 1 ); } 
-		return $sOut;
-	}
-	# same as above, but allow underscores
-	static function clean_str_for_field($sIn){
-		if( $sIn == "" ) return "";
-		$sOut = trim( strtolower( $sIn ) );
-		$sOut = preg_replace( "/\s\s+/" , " " , $sOut );					
-		$sOut = preg_replace( "/[^a-zA-Z0-9 -_]/" , "",$sOut );	
-		$sOut = preg_replace( "/--+/" , "-",$sOut );
-		$sOut = preg_replace( "/__+/" , "_",$sOut );
-		$sOut = preg_replace( "/ +- +/" , "-",$sOut );
-		$sOut = preg_replace( "/ +_ +/" , "_",$sOut );
-		$sOut = preg_replace( "/\s\s+/" , " " , $sOut );	
-		$sOut = preg_replace( "/\s/" , "-" , $sOut );
-		$sOut = preg_replace( "/--+/" , "-" , $sOut );
-		$sOut = preg_replace( "/__+/" , "_" , $sOut );
-		$nWord_length = strlen( $sOut );
-		if( $sOut[ $nWord_length - 1 ] == "-" || $sOut[ $nWord_length - 1 ] == "_" ) { $sOut = substr( $sOut , 0 , $nWord_length - 1 ); } 
-		return $sOut;		
-	}	
-	# Generate a label, value, etc. for any given setting 
-	## input can be a string or array and a full, formatted array will be returned
-	## If $field is a string we assume the string is the label
-	## if $field is an array we assume that at least a label exists
-	## optionally, the parent field's name can be passed for better labelling
-	static function get_field_array( $field, $parent_name = ''){
+	/**
+	 * Return a URL-friendly version of a string ( letters/numbers/hyphens only ), replacing unfriendly chunks with a single dash
+	 *
+	 * @param 	string 	$input 		The string to clean for URL usage
+	 * @return 	string
+	 *
+	 * @since 	1.0.0
+	 */
+	static function clean_str_for_url( $input ){
+
+		if( $input == "" ) return "";
+		$output = trim( strtolower( $input ) );
+		$output = preg_replace( "/\s\s+/" , " " , $output );					
+		$output = preg_replace( "/[^a-zA-Z0-9 -]/" , "",$output );	
+		$output = preg_replace( "/--+/" , "-",$output );
+		$output = preg_replace( "/ +- +/" , "-",$output );
+		$output = preg_replace( "/\s\s+/" , " " , $output );	
+		$output = preg_replace( "/\s/" , "-" , $output );
+		$output = preg_replace( "/--+/" , "-" , $output );
+		$word_length = strlen( $output );
+		if( $output[ $word_length - 1 ] == "-" ) { $output = substr( $output , 0 , $word_length - 1 ); } 
+		return $output;
+	
+	} # end: clean_str_for_url()
+
+	/**
+	 * Return a field-key-friendly version of a string ( letters/numbers/hyphens/underscores only ), replacing unfriendly chunks with a single underscore
+	 *
+	 * @param 	string 	$input 		The string to clean for field key usage
+	 * @return 	string
+	 *
+	 * @since 	1.0.0
+	 */
+	static function clean_str_for_field($input){
+
+		if( $input == "" ) return "";
+		$output = trim( strtolower( $input ) );
+		$output = preg_replace( "/\s\s+/" , " " , $output );					
+		$output = preg_replace( "/[^a-zA-Z0-9 -_]/" , "",$output );	
+		$output = preg_replace( "/--+/" , "-",$output );
+		$output = preg_replace( "/__+/" , "_",$output );
+		$output = preg_replace( "/ +- +/" , "-",$output );
+		$output = preg_replace( "/ +_ +/" , "_",$output );
+		$output = preg_replace( "/\s\s+/" , " " , $output );	
+		$output = preg_replace( "/\s/" , "-" , $output );
+		$output = preg_replace( "/--+/" , "-" , $output );
+		$output = preg_replace( "/__+/" , "_" , $output );
+		$word_length = strlen( $output );
+		if( $output[ $word_length - 1 ] == "-" || $output[ $word_length - 1 ] == "_" ) { $output = substr( $output , 0 , $word_length - 1 ); } 
+		return $output;		
+
+	} # end: clean_str_for_field()
+
+	/**
+	 * Generate a label, value, etc. for any given setting 
+	 * input can be a string or array and a full, formatted array will be returned
+	 * If $field is a string we assume the string is the label
+	 * if $field is an array we assume that at least a label exists
+	 * optionally, the parent field's name can be passed for better labelling
+	 *
+	 * @param	(array|string)		$field {
+	 *		The key string or field array that we are completing
+	 *
+	 * 		@type 	string 		$type 		The field type (default: text)
+	 * 		@type 	string 		$id			The ID attribute 
+	 * 		@type	mixed 		$value		The field value
+	 * 		@type 	string 		$label		The label for the field
+	 * 		@type 	string 		$name		The input name (default: $id)
+	 * 		@type 	array 		$choices	Choices for the field value
+	 *
+	 * }
+	 * @param 	string 	$parent_name 	Added for child fields to identify their parent
+	 * @since 	1.0.0
+	 */
+	static function get_field_array( $field, $parent_name = '' ) {
+
 		$id = $parent_name ? $parent_name.'_' : '';
 		if(!is_array($field)){
 			$id .= self::clean_str_for_field($field);
@@ -270,11 +351,19 @@ class Alm {
 			}
 		}
 		return $out;
-	}
-	# Get array of choices for a setting field
-	## This allows choices to be set as strings or arrays with detailed properties, 
-	## so that either way our options display function will have the data it needs
-	static function get_choice_array($setting){
+	
+	} # end: get_field_array()
+
+	/**
+	 * Get array of choices for a setting field
+	 * This allows choices to be set as strings or arrays with detailed properties, 
+	 * so that either way our options display function will have the data it needs
+	 *
+	 * @param 	array 	$setting 	The field array to get choices for (see get_field_array)
+	 * @since 	1.0.0
+	 */
+	static function get_choice_array( $setting ) {
+		
 		extract($setting);
 		if(!isset($choices)) return;
 		$out = array();
@@ -303,7 +392,9 @@ class Alm {
 			}
 		}
 		return $out;
-	}
+
+	} # end: get_choice_array()
+
 } # end class Alm
 
 # require files for plugin

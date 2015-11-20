@@ -21,10 +21,12 @@ You can customize the look of your alert message in a few ways.
 
 = Placement =
 
-You can specify where the alert should go within your site layout.
+You can specify where the alert should go within your site layout in a few different ways.
 
 * Use any unique CSS-style selector (e.g. #my-div) to choose where to insert the message, or leave this blank to insert at the top of your site's body
 * Choose to insert the alert message either before or after your chosen page element (default is before)
+* Use the shortcode [alm_alert] to insert the message anywhere within the content of any page or post
+
 
 = Locations =
 
