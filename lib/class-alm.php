@@ -81,6 +81,16 @@ class Alm {
 			wp_add_inline_style( 'alm-css', $more_css );
 		} # end if
 
+		$new_style = "
+        #hide-btn:hover {
+            background-color:" . Alm_Options::$options['default_msg_text_color'] . ";
+            color:" . Alm_Options::$options['default_msg_bg_color'] . ";
+        }";
+        
+        var_dump($new_style);
+
+		wp_add_inline_style( 'alm-css', $new_style );
+
 		# pass the necessary settings to the JS file
 		$a = array(
 			'message' => $msg,
