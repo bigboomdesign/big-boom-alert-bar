@@ -62,7 +62,9 @@ class Alert_Bar {
 	static function default_message() {
 
 		# Check if we have a message in the system
-		if( empty ( $msg = Alert_Bar_Options::$options['default_msg'] ) ) return;
+		if( empty ( Alert_Bar_Options::$options['default_msg'] ) ) return;
+
+		$msg = Alert_Bar_Options::$options['default_msg'];
 
 		# Check if we need to show the message on this page
 		if( ! self::alert_should_show() ) return;
