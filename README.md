@@ -1,6 +1,6 @@
 # Big Boom Alert Bar
 
-The alert is quickly styled and placed on your site, and easily closed by your site visitors should they choose to dismiss it.
+WordPress plugin that lets you add an alert message to your site. The alert is quickly styled and placed on your site, and easily closed by your site visitors should they choose to dismiss it.
 
 ## Styling
 
