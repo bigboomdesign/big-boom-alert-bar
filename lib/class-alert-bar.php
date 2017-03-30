@@ -91,7 +91,7 @@ class Alert_Bar {
 
 		# pass the necessary settings to the JS file
 		$a = array(
-			'message' => $msg,
+			'message' => do_shortcode( $msg ),
 			'bgColor' => Alert_Bar_Options::$options['default_msg_bg_color'],
 			'textColor' => Alert_Bar_Options::$options['default_msg_text_color'],
 			'domElement' => Alert_Bar_Options::$options['dom_element'],
@@ -125,7 +125,7 @@ class Alert_Bar {
 				if($default_msg_text_color) echo 'color: '.$default_msg_text_color.'; '; 
 				if($default_msg_bg_color) echo 'background: '.$default_msg_bg_color.'; ';
 			?>"		
-		><?php echo $default_msg; ?>
+		><?php echo do_shortcode( $default_msg ); ?>
 		</div>
 		<?php
 
